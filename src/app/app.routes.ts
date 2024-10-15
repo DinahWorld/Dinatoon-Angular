@@ -7,5 +7,5 @@ export const routes: Routes = [
     {path: 'dinatoon/:id', component: DinatoonDetailComponent},
     {path: 'home', component: HomeComponent},
     {path: 'login-register', component: LoginRegisterComponent},
-    {path: '', redirectTo: '/login-register', pathMatch: 'full'}
+    {path: '', redirectTo: '/home', pathMatch: 'full'}
 ];

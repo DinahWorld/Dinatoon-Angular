@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "DinaToon": {
+    "Dinatoon-Angular": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -37,17 +37,15 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "prerender": false,
+            "ssr": false
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "2MB",
                   "maximumError": "1MB"
                 },
                 {
@@ -70,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "DinaToon:build:production"
+              "buildTarget": "Dinatoon-Angular:build:production"
             },
             "development": {
-              "buildTarget": "DinaToon:build:development"
+              "buildTarget": "Dinatoon-Angular:build:development"
             }
           },
           "defaultConfiguration": "development"
