@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import KeenSlider, {KeenSliderInstance} from "keen-slider";
-import {NgForOf, NgStyle} from "@angular/common";
+import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 
 @Component({
@@ -9,7 +9,7 @@ import {RouterLink, RouterLinkActive} from "@angular/router";
     imports: [
         NgStyle,
         NgForOf,
-        RouterLink, RouterLinkActive
+        RouterLink, RouterLinkActive, NgIf
     ],
     templateUrl: './dinatoon-list.component.html',
     styleUrls: [
@@ -24,14 +24,16 @@ export class DinatoonListComponent {
     @Input()
     dinatoons: {
         id: number | string,
-        title: string,
-        image: string,
+        name: string,
+        imageUrl: string,
         genre?: string,
         actualChapter?: string,
         chapterTotal?: string
     }[] = [];
 
+
     ngAfterViewInit() {
+
         if (typeof window !== 'undefined' && this.sliderRef?.nativeElement) {
             this.slider = new KeenSlider(this.sliderRef.nativeElement, {
                 slides: {

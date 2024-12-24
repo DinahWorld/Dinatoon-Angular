@@ -1,11 +1,11 @@
 <div class="home-header">
     <div #sliderRefHome class="keen-slider">
         <div *ngFor="let dinatoon of currentlyReading"
-             [ngStyle]="{ 'background-image': 'url(' + dinatoon.image + ')'}"
+             [ngStyle]="{ 'background-image': 'url(' + dinatoon.imageUrl + ')'}"
              class="keen-slider__slide home-header-image my-list-slide"
         >
             <div class="home-header-text">
-                <h2>{{ dinatoon.title }}</h2>
+                <h2>{{ dinatoon.name }}</h2>
                 <h3>en cours</h3>
             </div>
         </div>
@@ -14,8 +14,21 @@
 
 <div class="search-bar-container">
     <div class="search-bar">
-        <input placeholder="Rechercher..." type="text"/>
+        <input
+                (keyup.enter)="onSearch()"
+                [(ngModel)]="searchQuery"
+                placeholder="Rechercher..."
+                type="text"/>
     </div>
+
+    <div *ngIf="results?.length" class="search-results">
+        <ul>
+            <li *ngFor="let result of results">
+                {{ result.title }}
+            </li>
+        </ul>
+    </div>
+    <p *ngIf="!results?.length && searchQuery">No results found</p>
 </div>
 
 <div class="home-list">

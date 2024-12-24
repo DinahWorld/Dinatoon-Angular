@@ -1,11 +1,11 @@
 <div *ngIf="dinatoon" class="dinatoon-detail">
     <div *ngIf="dinatoon" class="dinatoon-detail-header">
-        <div [ngStyle]="{ 'background-image': 'url(' + dinatoon.image + ')'}" class="dinatoon-detail-header-image">
+        <div [ngStyle]="{ 'background-image': 'url(' + dinatoon.imageUrl + ')'}" class="dinatoon-detail-header-image">
         </div>
     </div>
     <div class="dinatoon-detail-desc">
         <div class="dinatoon-detail-text">
-            <h2>{{ dinatoon.title }}</h2>
+            <h2>{{ dinatoon.name }}</h2>
             <h3>{{ dinatoon.genre }}</h3>
         </div>
         <div class="dinatoon-detail-progress">

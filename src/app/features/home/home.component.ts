@@ -1,8 +1,10 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {DinatoonListComponent} from "../dinatoon-list/dinatoon-list.component";
 import KeenSlider, {KeenSliderInstance} from "keen-slider";
-import {NgForOf, NgStyle} from "@angular/common";
+import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {SearchService} from "../../services/search.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-dinatoon',
@@ -12,7 +14,8 @@ import {FormsModule} from "@angular/forms";
         DinatoonListComponent,
         NgStyle,
         NgForOf,
-        FormsModule
+        FormsModule,
+        NgIf
     ],
     styleUrls: [
         'home.component.scss',
@@ -22,78 +25,97 @@ import {FormsModule} from "@angular/forms";
 
 export class HomeComponent {
     @ViewChild("sliderRefHome") sliderRef: ElementRef<HTMLElement>;
+    searchQuery: string = '';
+    results: any[] = [];
     slider: KeenSliderInstance | null = null;
     username: string = "Dinath";
     savedDinatoons = [
         {
             id: 1,
-            title: 'Solo Leveling',
-            image: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
+            name: 'Solo Leveling',
+            imageUrl: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
         },
         {
             id: 2,
-            title: 'Tower of God',
-            image: 'https://m.media-amazon.com/images/M/MV5BZWQwZGY3MGItZjQ3OS00MzYxLTlmMWMtNjZiYTY2ZDk4ZjFhXkEyXkFqcGc@._V1_.jpg'
+            name: 'Tower of God',
+            imageUrl: 'https://m.media-amazon.com/images/M/MV5BZWQwZGY3MGItZjQ3OS00MzYxLTlmMWMtNjZiYTY2ZDk4ZjFhXkEyXkFqcGc@._V1_.jpg'
         },
         {
             id: 3,
-            title: 'The Beginning After The End',
-            image: 'https://www.manga-news.com/public/images/series/The_Beginning_After_The_End_1_kbooks.webp'
+            name: 'The Beginning After The End',
+            imageUrl: 'https://www.manga-news.com/public/images/series/The_Beginning_After_The_End_1_kbooks.webp'
         },
         {
             id: 10,
-            title: 'Hardcore Leveling Warrior',
-            image: 'https://i.ebayimg.com/images/g/H4gAAOSwT31jEVCE/s-l1200.jpg'
+            name: 'Hardcore Leveling Warrior',
+            imageUrl: 'https://i.ebayimg.com/images/g/H4gAAOSwT31jEVCE/s-l1200.jpg'
         },
         {
             id: 4,
-            title: 'Omniscient Reader\'s Viewpoint',
-            image: 'https://animotaku.fr/wp-content/uploads/2024/07/anime-omniscient-reader-visuel-1.jpg'
+            name: 'Omniscient Reader\'s Viewpoint',
+            imageUrl: 'https://animotaku.fr/wp-content/uploads/2024/07/anime-omniscient-reader-visuel-1.jpg'
         },
-        {id: 5, title: 'God of Bath', image: 'https://i.mydramalist.com/PnXKwf.jpg'},
-        {id: 6, title: 'Viral Hit', image: 'https://i.ebayimg.com/images/g/~scAAOSwXSVhY5AD/s-l1200.jpg'},
+        {id: 5, name: 'God of Bath', imageUrl: 'https://i.mydramalist.com/PnXKwf.jpg'},
+        {id: 6, name: 'Viral Hit', imageUrl: 'https://i.ebayimg.com/images/g/~scAAOSwXSVhY5AD/s-l1200.jpg'},
         {
             id: 7,
-            title: 'Hive',
-            image: 'https://i.namu.wiki/i/H5OYL4w15QsKH2tB7uwwIwQovHJ4HyJ9hzF-ktu_m_tTd3VBlUe-UYNVewirm53O6qru3gEOIe3Ekw8qwS1M9Q.webp'
+            name: 'Hive',
+            imageUrl: 'https://i.namu.wiki/i/H5OYL4w15QsKH2tB7uwwIwQovHJ4HyJ9hzF-ktu_m_tTd3VBlUe-UYNVewirm53O6qru3gEOIe3Ekw8qwS1M9Q.webp'
         }
     ];
     currentlyReading = [
         {
             id: 1,
-            title: 'Solo Leveling',
-            image: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
+            name: 'Solo Leveling',
+            imageUrl: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
         },
-        {id: 6, title: 'Viral Hit', image: 'https://i.ebayimg.com/images/g/~scAAOSwXSVhY5AD/s-l1200.jpg'},
+        {id: 6, name: 'Viral Hit', imageUrl: 'https://i.ebayimg.com/images/g/~scAAOSwXSVhY5AD/s-l1200.jpg'},
         {
             id: 7,
-            title: 'Hive',
-            image: 'https://i.namu.wiki/i/H5OYL4w15QsKH2tB7uwwIwQovHJ4HyJ9hzF-ktu_m_tTd3VBlUe-UYNVewirm53O6qru3gEOIe3Ekw8qwS1M9Q.webp'
+            name: 'Hive',
+            imageUrl: 'https://i.namu.wiki/i/H5OYL4w15QsKH2tB7uwwIwQovHJ4HyJ9hzF-ktu_m_tTd3VBlUe-UYNVewirm53O6qru3gEOIe3Ekw8qwS1M9Q.webp'
         }
     ];
     completedDinatoons = [
-        {id: 8, title: 'Lookism', image: 'https://i.ebayimg.com/images/g/f9kAAOSwxIhjCXyc/s-l1200.jpg'},
-        {id: 5, title: 'God of Bath', image: 'https://i.mydramalist.com/PnXKwf.jpg'}
+        {id: 8, name: 'Lookism', imageUrl: 'https://i.ebayimg.com/images/g/f9kAAOSwxIhjCXyc/s-l1200.jpg'},
+        {id: 5, name: 'God of Bath', imageUrl: 'https://i.mydramalist.com/PnXKwf.jpg'}
     ];
     lovedDinatoons = [
         {
             id: 1,
-            title: 'Solo Leveling',
-            image: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
+            name: 'Solo Leveling',
+            imageUrl: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
         },
         {
             id: 9,
-            title: 'Omniscient Reader\'s Viewpoint',
-            image: 'https://animotaku.fr/wp-content/uploads/2024/07/anime-omniscient-reader-visuel-1.jpg'
+            name: 'Omniscient Reader\'s Viewpoint',
+            imageUrl: 'https://animotaku.fr/wp-content/uploads/2024/07/anime-omniscient-reader-visuel-1.jpg'
         },
         {
             id: 10,
-            title: 'Hardcore Leveling Warrior',
-            image: 'https://i.ebayimg.com/images/g/H4gAAOSwT31jEVCE/s-l1200.jpg'
+            name: 'Hardcore Leveling Warrior',
+            imageUrl: 'https://i.ebayimg.com/images/g/H4gAAOSwT31jEVCE/s-l1200.jpg'
         },
-        {id: 11, title: 'Lookism', image: 'https://i.ebayimg.com/images/g/f9kAAOSwxIhjCXyc/s-l1200.jpg'},
+        {id: 11, name: 'Lookism', imageUrl: 'https://i.ebayimg.com/images/g/f9kAAOSwxIhjCXyc/s-l1200.jpg'},
     ];
 
+    constructor(private searchService: SearchService, private router: Router) {
+    }
+
+    onSearch() {
+        if (this.searchQuery.trim().length > 0) {
+            this.searchService.searchManga(this.searchQuery).subscribe({
+                next: (results) => {
+                    this.router.navigate(['/search'], {
+                        queryParams: {results: JSON.stringify(results)}
+                    });
+                },
+                error: (err) => {
+                    console.error('Erreur lors de la recherche :', err);
+                }
+            });
+        }
+    }
 
     ngAfterViewInit() {
         if (typeof window !== 'undefined' && this.sliderRef?.nativeElement) {
