@@ -1,0 +1,7 @@
+<div class="dinatoon-list">
+    <div *ngFor="let dinatoon of dinatoons"
+         [ngStyle]="{ 'background-image': 'url(' + dinatoon.imageUrl + ')' }"
+         [routerLink]="['/dinatoon/' + dinatoon.id]"
+         class="dinatoon-item">
+    </div>
+</div>

@@ -23,12 +23,8 @@ export class DinatoonListComponent {
     slider: KeenSliderInstance | null = null;
     @Input()
     dinatoons: {
-        id: number | string,
-        name: string,
+        id: string,
         imageUrl: string,
-        genre?: string,
-        actualChapter?: string,
-        chapterTotal?: string
     }[] = [];
 
 

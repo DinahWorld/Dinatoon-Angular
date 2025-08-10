@@ -38,7 +38,7 @@ export class LoginRegisterComponent {
     constructor(private readonly fb: FormBuilder, private readonly authService: AuthService, private router: Router) {
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            password: ['', [Validators.required, Validators.minLength(2)]]
         });
 
         this.registerForm = this.fb.group({

@@ -1,0 +1,25 @@
+<nav class="navbar">
+    <div class="navbar-brand">
+        <a class="logo" href="#">MonSite</a>
+    </div>
+    <ul class="navbar-links">
+        <li><a [routerLinkActiveOptions]="{ exact: true }" routerLink="/" routerLinkActive="active">Accueil</a></li>
+        <li><a routerLink="/about" routerLinkActive="active">À propos</a></li>
+        <li><a routerLink="/services" routerLinkActive="active">Services</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active">Contact</a></li>
+    </ul>
+    <button (click)="toggleMenu()" class="navbar-toggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+</nav>
+
+<!-- Menu mobile -->
+<ul *ngIf="menuOpen" class="navbar-links-mobile">
+    <li><a (click)="closeMenu()" [routerLinkActiveOptions]="{ exact: true }" routerLink="/" routerLinkActive="active">Accueil</a>
+    </li>
+    <li><a (click)="closeMenu()" routerLink="/about" routerLinkActive="active">À propos</a></li>
+    <li><a (click)="closeMenu()" routerLink="/services" routerLinkActive="active">Services</a></li>
+    <li><a (click)="closeMenu()" routerLink="/contact" routerLinkActive="active">Contact</a></li>
+</ul>

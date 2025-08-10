@@ -5,6 +5,7 @@ import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {SearchService} from "../../services/search.service";
 import {Router} from "@angular/router";
+import {UserDinatoonCategoryService} from "../../services/user-dinatoon-category.service";
 
 @Component({
     selector: 'app-dinatoon',
@@ -29,86 +30,24 @@ export class HomeComponent {
     results: any[] = [];
     slider: KeenSliderInstance | null = null;
     username: string = "Dinath";
-    savedDinatoons = [
-        {
-            id: 1,
-            name: 'Solo Leveling',
-            imageUrl: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
-        },
-        {
-            id: 2,
-            name: 'Tower of God',
-            imageUrl: 'https://m.media-amazon.com/images/M/MV5BZWQwZGY3MGItZjQ3OS00MzYxLTlmMWMtNjZiYTY2ZDk4ZjFhXkEyXkFqcGc@._V1_.jpg'
-        },
-        {
-            id: 3,
-            name: 'The Beginning After The End',
-            imageUrl: 'https://www.manga-news.com/public/images/series/The_Beginning_After_The_End_1_kbooks.webp'
-        },
-        {
-            id: 10,
-            name: 'Hardcore Leveling Warrior',
-            imageUrl: 'https://i.ebayimg.com/images/g/H4gAAOSwT31jEVCE/s-l1200.jpg'
-        },
-        {
-            id: 4,
-            name: 'Omniscient Reader\'s Viewpoint',
-            imageUrl: 'https://animotaku.fr/wp-content/uploads/2024/07/anime-omniscient-reader-visuel-1.jpg'
-        },
-        {id: 5, name: 'God of Bath', imageUrl: 'https://i.mydramalist.com/PnXKwf.jpg'},
-        {id: 6, name: 'Viral Hit', imageUrl: 'https://i.ebayimg.com/images/g/~scAAOSwXSVhY5AD/s-l1200.jpg'},
-        {
-            id: 7,
-            name: 'Hive',
-            imageUrl: 'https://i.namu.wiki/i/H5OYL4w15QsKH2tB7uwwIwQovHJ4HyJ9hzF-ktu_m_tTd3VBlUe-UYNVewirm53O6qru3gEOIe3Ekw8qwS1M9Q.webp'
-        }
-    ];
-    currentlyReading = [
-        {
-            id: 1,
-            name: 'Solo Leveling',
-            imageUrl: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
-        },
-        {id: 6, name: 'Viral Hit', imageUrl: 'https://i.ebayimg.com/images/g/~scAAOSwXSVhY5AD/s-l1200.jpg'},
-        {
-            id: 7,
-            name: 'Hive',
-            imageUrl: 'https://i.namu.wiki/i/H5OYL4w15QsKH2tB7uwwIwQovHJ4HyJ9hzF-ktu_m_tTd3VBlUe-UYNVewirm53O6qru3gEOIe3Ekw8qwS1M9Q.webp'
-        }
-    ];
-    completedDinatoons = [
-        {id: 8, name: 'Lookism', imageUrl: 'https://i.ebayimg.com/images/g/f9kAAOSwxIhjCXyc/s-l1200.jpg'},
-        {id: 5, name: 'God of Bath', imageUrl: 'https://i.mydramalist.com/PnXKwf.jpg'}
-    ];
-    lovedDinatoons = [
-        {
-            id: 1,
-            name: 'Solo Leveling',
-            imageUrl: 'https://www.recyclivre.com/media/cache/sylius_shop_product_original/bf/b8/d9e4d5d7aad9fc70646639360f24.jpg'
-        },
-        {
-            id: 9,
-            name: 'Omniscient Reader\'s Viewpoint',
-            imageUrl: 'https://animotaku.fr/wp-content/uploads/2024/07/anime-omniscient-reader-visuel-1.jpg'
-        },
-        {
-            id: 10,
-            name: 'Hardcore Leveling Warrior',
-            imageUrl: 'https://i.ebayimg.com/images/g/H4gAAOSwT31jEVCE/s-l1200.jpg'
-        },
-        {id: 11, name: 'Lookism', imageUrl: 'https://i.ebayimg.com/images/g/f9kAAOSwxIhjCXyc/s-l1200.jpg'},
-    ];
+    userCategories: any;
 
-    constructor(private searchService: SearchService, private router: Router) {
+    constructor(private readonly udcService: UserDinatoonCategoryService, private readonly searchService: SearchService, private readonly router: Router) {
+    }
+
+    ngOnInit(): void {
+        this.udcService.getByUser().subscribe(data => {
+            this.userCategories = data;
+            console.log(this.userCategories);
+        });
     }
 
     onSearch() {
         if (this.searchQuery.trim().length > 0) {
             this.searchService.searchManga(this.searchQuery).subscribe({
                 next: (results) => {
-                    this.router.navigate(['/search'], {
-                        queryParams: {results: JSON.stringify(results)}
-                    });
+                    this.searchService.setResults(JSON.stringify(results));
+                    this.router.navigate(['/search']);
                 },
                 error: (err) => {
                     console.error('Erreur lors de la recherche :', err);
